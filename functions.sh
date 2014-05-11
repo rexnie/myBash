@@ -265,6 +265,54 @@ find_hard_links ()
     exit 0
 }
 
+catch_int ()
+{
+    echo "got int signal"
+    while true
+    do
+        echo "ctrl + z to exit";
+    done
+}
+
+#Key: use trap to lock console
+lockstty_with_trap ()
+{
+    # ignore the signals 
+    trap "" SIGHUP SIGQUIT SIGCONT
+    
+    #catch ctrl+c signal
+    trap "catch_int" SIGINT
+
+    echo -n "key:"
+    read k1
+    echo -n "again:"
+    read k2
+    k3=0
+
+    if [ "$k1" == "$k2" ];then
+        echo "current pid= $$,ready to lock tty"
+        sleep 3
+        sync
+        
+        #disable "echo input characters"
+        stty -echo
+        
+        #clear screen
+        tput clear
+        until [ "$k2" == "$k3" ]
+        do
+            #do nothing but read unlock key
+            read k3
+        done
+    else
+        echo "lock fail: key not match"
+    fi
+    
+    #"echo input characters"
+    stty echo
+    
+    exit 0
+}
 
 ##### main function####
 
@@ -286,4 +334,7 @@ find_hard_links ()
 
 #getopt_example "$@"
 
-find_hard_links "$@"
+#find_hard_links "$@"
+
+lockstty_with_trap 
+
