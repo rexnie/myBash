@@ -211,6 +211,60 @@ getopt_example ()
     exit 0
 }
 
+#Key: test set/find cmd
+# 
+find_hard_links ()
+{
+    declare -r usage="Usage:\n
+    ./functions file [search_dir]\n
+    search files which hard link to filehd under search_dir\n
+    filehd: the regular file,had more than 2 hard links\n
+    search_dir: search directory\n"
+
+    if [ $# != 1 -a $# != 2 ];then
+        echo -e $usage
+        exit 1
+    fi
+
+    if [ ! -f "$1" ];then
+        echo "filehd must be regular file"
+        exit 1
+    fi
+
+    if [ -n "$2" -a ! -d "$2" ];then
+        echo "search_dir must be a directory"
+        exit 1
+    fi
+
+    filehd="$1"
+
+    if [ $# -eq 1 ];then
+        dire="."
+    else
+        dire="$2"
+    fi
+
+    # set -- set positional parameter
+    set -- $(ls -l "$filehd")
+
+    linkcnt=$2
+    if [ "$linkcnt" -eq 1 ];then
+        echo "no other hard links to $filehd"
+        exit 1;
+    fi
+    
+    # get inod of filehd
+    set $(ls -i "$filehd")
+
+    inode=$1
+
+    echo "links:using find to search for links..."
+    #skip other file system,under search_dir
+    find "$dire" -xdev -inum $inode -print
+    
+    exit 0
+}
+
 
 ##### main function####
 
@@ -231,3 +285,5 @@ getopt_example ()
 #for_example 
 
 #getopt_example "$@"
+
+find_hard_links "$@"
