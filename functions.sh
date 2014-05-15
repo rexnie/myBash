@@ -314,6 +314,27 @@ lockstty_with_trap ()
     exit 0
 }
 
+#Key: redirect stdout to file
+redirect_stdout ()
+{
+    echo "save files under current directory into savethem"
+    
+    # redirect the stdout to savethem in current process
+    exec >savethem
+    # * means files/dirs under current directory
+    for i in *
+    do
+        if [[ $i != "savethem" && ! -d "$i" ]];then 
+            echo "=============================="
+            echo "File: $i"
+            echo "=============================="
+            cat "$i"
+        fi
+    done
+    #stdout to console
+    exec > /dev/tty
+}
+
 ##### main function####
 
 #first_func nie 123
@@ -336,5 +357,6 @@ lockstty_with_trap ()
 
 #find_hard_links "$@"
 
-lockstty_with_trap 
+#lockstty_with_trap 
 
+#redirect_stdout
