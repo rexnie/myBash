@@ -335,6 +335,16 @@ redirect_stdout ()
     exec > /dev/tty
 }
 
+#Key: alias "sudo minicom -C dynamic.log"
+sminicom ()
+{
+    #add this function to ~/.bashrc
+    #just execute: sminicom
+    #can't use alias command in ~/.bashrc,because it will create the log file with the same name
+    #echo `date` >> /home/niedaocai/a.txt
+    sudo minicom -C "/home/niedaocai/logs/`date +%Y%m%d_%H%M%S`.log"
+}
+
 ##### main function####
 
 #first_func nie 123
@@ -360,3 +370,5 @@ redirect_stdout ()
 #lockstty_with_trap 
 
 #redirect_stdout
+
+#sminicom
