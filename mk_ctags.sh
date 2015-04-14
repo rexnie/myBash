@@ -32,12 +32,18 @@ exclude_f=(
 "arch/x86/*"
 "arch/xtensa/*"
 
+# start with i dir
+"board/[^i]*/*"
+
 "arch/mips/xburst/soc-4775/board/inwatch2"
 "arch/mips/xburst/soc-4775/board/m16"
 "arch/mips/xburst/soc-4775/board/orion"
 "arch/mips/xburst/soc-4775/board/s2*/*"
 "arch/mips/xburst/soc-4775/board/sw501"
 "arch/mips/xburst/soc-4775/board/test"
+
+# start with w, w*.h
+"include/configs/[^w]*.h"
 
 )
 
