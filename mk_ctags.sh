@@ -1,65 +1,83 @@
 #!/bin/bash
-#this tool will create a tag file for ctag command
-#with exclude file/diretory,which u can config it
-#the basic idea is: ctag -R --exclude=xxxx
+#changlist
+#1. add regular expression(use 'ls -d dirname') for exclude file/dir
+
+fn="_exclude_tmp_file"
+ex_options=""
 
 #add the file/directory you want to exclude
 #each file/dir per line
-#dir comes behind the file item
-exclude_f=( 
 #files
-
-# directory
-"arch/alpha/*"
-"arch/arm/*"
-"arch/iavr32/*"
-"arch/blackfin/*"
-"arch/cris/*"
-"arch/frv/*"
-"arch/h8300/*"
-"arch/ia64/*"
-"arch/m32r/*"
-"arch/m68k/*"
-"arch/microblaze/*"
-"arch/mn10300/*"
-"arch/parisc/*"
-"arch/score/*"
-"arch/sh/*"
-"arch/sparc/*"
-"arch/tile/*"
-"arch/um/*"
-"arch/unicore32/*"
-"arch/x86/*"
-"arch/xtensa/*"
-
-# start with i dir
-"board/[^i]*/*"
-
-"arch/mips/xburst/soc-4775/board/inwatch2"
-"arch/mips/xburst/soc-4775/board/m16"
-"arch/mips/xburst/soc-4775/board/orion"
-"arch/mips/xburst/soc-4775/board/s2*/*"
-"arch/mips/xburst/soc-4775/board/sw501"
-"arch/mips/xburst/soc-4775/board/test"
-
-# start with w, w*.h
-"include/configs/[^w]*.h"
+exclude_file=(
 
 )
 
-array_len=${#exclude_f[@]}
-options=""
+#directory
+exclude_dir=(
+#not arch/mips/
+"arch/[^m]*/"
 
-for((i=0;i<array_len;i++))
-do
-    #echo $i,${exclude_f[$i]}
-    options+="--exclude=${exclude_f[$i]} "
-done
+#not arch/mips/xburst/soc-m200/
+"arch/mips/xburst/soc-[^m]*/"
 
-#echo $options
+#not arch/mips/xburst/soc-m200/board/newton/
+"arch/mips/xburst/soc-m200/board/[^n]*/"
+
+)
+
+function process_ex_file()
+{
+    for val in ${exclude_file[@]}
+    do
+        if [ $val ];then
+            #echo $val
+            echo $val >> $fn
+        fi
+    done
+}
+
+function process_ex_dir()
+{
+    for val in ${exclude_dir[@]}
+    do
+        if [ $val ];then
+            #echo $val
+            ls -d $val >> $fn
+        fi
+    done
+}
+
+function generate_result()
+{
+    while read eachline
+    do
+        if [ $eachline ];then
+            if [ -d $eachline ];then
+                ex_options+=" --exclude=${eachline}*"
+            elif [ -f $eachline ];then
+                ex_options+=" --exclude=${eachline}"
+            fi
+            #echo ${ex_options}, $eachline
+        fi
+    done < $fn
+    #echo ${ex_options}
+}
+
+# execute from here
+if [ -f $fn ];then
+    rm $fn
+    echo "remove $fn"
+fi
+
+process_ex_file
+process_ex_dir
+generate_result
+
 if [ -f "tags" ];then
     rm -rf tags
 fi
 
-ctags -R $options
+ctags -R $ex_options
 ls -lh tags
+
+#rm $fn
