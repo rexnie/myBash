@@ -9,20 +9,27 @@ ex_options=""
 #each file/dir per line
 #files
 exclude_file=(
-
+# files not n*.h
+"include/configs/[^n]*.h"
+#file common/board_f.c
+"common/board_f.c"
 )
 
 #directory
 exclude_dir=(
-#not arch/mips/
+#dir not arch/m*/
 "arch/[^m]*/"
 
-#not arch/mips/xburst/soc-m200/
+#dir not arch/mips/xburst/soc-m200/
 "arch/mips/xburst/soc-[^m]*/"
 
-#not arch/mips/xburst/soc-m200/board/newton/
+#dir not arch/mips/xburst/soc-m200/board/n*/
 "arch/mips/xburst/soc-m200/board/[^n]*/"
 
+#dir nand_spl/board/freescale/
+"nand_spl/board/freescale/"
+#dir board/ingenic/[d-m]*/ or board/ingenic/p*/
+"board/ingenic/[d-mp]*/"
 )
 
 function process_ex_file()
@@ -31,7 +38,7 @@ function process_ex_file()
     do
         if [ $val ];then
             #echo $val
-            echo $val >> $fn
+            ls $val >> $fn
         fi
     done
 }
@@ -80,4 +87,4 @@ fi
 ctags -R $ex_options
 ls -lh tags
 
-#rm $fn
+rm $fn
