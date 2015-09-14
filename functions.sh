@@ -345,6 +345,11 @@ sminicom ()
     sudo minicom -C "/home/niedaocai/logs/`date +%Y%m%d_%H%M%S`.log"
 }
 
+echo_custom()
+{
+  echo -e "\e[0;91m$1\e[0m"
+}
+
 ##### main function####
 
 #first_func nie 123
@@ -372,3 +377,5 @@ sminicom ()
 #redirect_stdout
 
 #sminicom
+
+#echo_custom 'something to print'
