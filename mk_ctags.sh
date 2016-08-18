@@ -84,7 +84,8 @@ if [ -f "tags" ];then
     rm -rf tags
 fi
 
-ctags -R $ex_options
+#ctags -R $ex_options
+ctags -R $ex_optoins --fields=+iaS --extra=+q *
 ls -lh tags
 
 rm $fn
