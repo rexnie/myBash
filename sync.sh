@@ -1,8 +1,11 @@
 #!/bin/bash
+# sync android code with infinite loop, and
+# print time spent and retry counter
+# TODO: rewrite it for other commands, not just "repo sync"
 
-catch_int () 
+catch_int ()
 {
-   echo "you press ctrl+c,quit loop" 
+   echo "you press ctrl+c,quit loop"
    loop=0
 }
 
@@ -11,28 +14,26 @@ do_work()
     while [ $loop != 0 ]
     do
         let "ttl_cnt+=1"
-        
+
         cmd_start=`cat /proc/uptime |cut -d " " -f 1`
-        #repo sync 
-        psa
+        #repo sync
         if [ $? == 0 ];then
             loop=0
             echo "sync succussful"
         else
-            echo "======================sync fail======================="
             let "fail_cnt+=1"
-
+            echo "======================sync fail======================="
         fi
         cmd_end=`cat /proc/uptime |cut -d " " -f 1`
         #t= echo "$cmd_end-$cmd_start" > bc
         echo "total times=" $ttl_cnt
         echo "fail times=" $fail_cnt
-        #echo "spend time:" $t 
+        #echo "spend time:" $t
     done
 
     time_end=`cat /proc/uptime |cut -d " " -f 1`
     #t= echo "$cmd_end-$cmd_start" > bc
-    #echo -n "total execute time:" 
+    #echo -n "total execute time:"
     #echo $t
 }
 
@@ -45,7 +46,7 @@ function sync_android()
     time_start=`cat /proc/uptime |cut -d " " -f 1`
 
     trap "catch_int" SIGINT
-    
+
     do_work
 }
 
