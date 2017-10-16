@@ -350,6 +350,20 @@ echo_custom()
   echo -e "\e[0;91m$1\e[0m"
 }
 
+#Key: rename v5xxxx to v9yyyyy under current directory
+my_rename ()
+{
+    #the source file name begin with v5
+    src=`ls | grep v5.*`
+
+    for var in $src
+    do
+        # the destination file name begin with v9
+        dst=v9`echo $var | cut -c 3-`
+        mv $var tmp/$dst
+    done
+}
+
 ##### main function####
 
 #first_func nie 123
@@ -379,3 +393,5 @@ echo_custom()
 #sminicom
 
 #echo_custom 'something to print'
+
+#my_rename
