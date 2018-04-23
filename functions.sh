@@ -335,14 +335,24 @@ redirect_stdout ()
     exec > /dev/tty
 }
 
-#Key: alias "sudo minicom -C dynamic.log"
+#Key: alias "sudo minicom -D /dev/ttyUSBX -C dynamic.log"
 sminicom ()
 {
     #add this function to ~/.bashrc
-    #just execute: sminicom
+    #just execute: sminicom [id]
     #can't use alias command in ~/.bashrc,because it will create the log file with the same name
-    #echo `date` >> /home/niedaocai/a.txt
-    sudo minicom -C "/home/niedaocai/logs/`date +%Y%m%d_%H%M%S`.log"
+
+    if [ ! -d ~/logs ]; then
+        mkdir ~/logs
+    fi
+
+    id=0 # default /dev/ttyUSB0
+    if [ $# -eq 1 ]; then
+        id=$1
+    fi
+    prefix=~/logs/USB${id}
+
+    sudo minicom -D /dev/ttyUSB${id} -C "${prefix}`date +%Y%m%d_%H%M%S`.log"
 }
 
 echo_custom()
