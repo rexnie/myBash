@@ -2,11 +2,11 @@
 #===============================================================================
 #
 #          FILE: shell_log.sh
-# 
-#         USAGE: source shell_log.sh 
-# 
+#
+#         USAGE: source shell_log.sh
+#
 #   DESCRIPTION: color table refer to https://github.com/yonchu/shell-color-pallet
-# 
+#
 #       OPTIONS: ---
 #  REQUIREMENTS: ---
 #          BUGS: ---
