@@ -14,11 +14,14 @@ pkg=$1
 LOGFILE="$1_rebuild.log"
 INFO "$1-rebuild starting..."
 
-# redownload & full rebuild
+# use case 1: redownload & full rebuild
+# code clean, long build time
+# note: make $pkg-source do NOT sync code
 #make $pkg-dirclean
 #make $pkg-rebuild 2>&1|tee $LOGFILE
 
-# change code under output/build/xxxx/, rebuild
+# use case 2: change code under output/build/xxxx/, rebuild
+# modify under build dir, short build time
 make $pkg-reconfigure 2>&1|tee $LOGFILE
 
 date >> $LOGFILE
