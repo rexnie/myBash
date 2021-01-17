@@ -22,6 +22,7 @@ INFO "$1-rebuild starting..."
 
 # use case 2: change code under output/build/xxxx/, rebuild
 # modify under build dir, short build time
+make $pkg-source
 make $pkg-reconfigure 2>&1|tee $LOGFILE
 
 date >> $LOGFILE
